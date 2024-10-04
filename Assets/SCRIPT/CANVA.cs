@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class CANVA : MonoBehaviour
@@ -15,12 +17,12 @@ public class CANVA : MonoBehaviour
 
     [SerializeField]
     LeanTweenType animCurve;
+
     //Start is called before the first frame update
     void Start()
     {
-        background.SetActive(false);
-        popup.SetActive(false);
-        
+
+        HidePopup();
     }
 
     // Update is called once per frame
@@ -29,10 +31,44 @@ public class CANVA : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            background.SetActive(true);
-        popup.SetActive(true);
-            LeanTween.moveLocalY(popup, -900f, 0f);
-            LeanTween.moveLocalY(popup, 0f, timeAnim).setEase(animCurve);
+            if ((popup.activeSelf))
+               {
+                HidePopup();
+                }
+
+            else
+            {
+                ShowPopUp();
+            }
         }
     }
+    public void ShowPopUp()
+        {
+
+            background.SetActive(true);
+            popup.SetActive(true);
+            LeanTween.moveLocalY(popup, -900f, 0f);
+            LeanTween.moveLocalY(popup, 0f, timeAnim).setEase(animCurve);
+    
+}
+
+    public void HidePopup()
+        //LEANTWEEN ES UNA ANIMACIÓN
+    {
+        LeanTween.moveLocalY(popup, -900f, timeAnim).setEase(animCurve).setOnComplete(() =>
+        {
+            popup.SetActive(false);
+        });
+        LeanTween.alphaCanvas(background.GetComponent<CanvasGroup>(), 0f, timeAnim).setOnComplete(() =>
+        {
+            background.SetActive(false);
+
+        LeanTween.alphaCanvas(background.GetComponent<CanvasGroup>(), 1f,timeAnim);
+    });
+
+        }
+
+    // PARA QUE EL ALFA SE PONGA EN 1 PONERLO A 0 SEGUNGOS
+   // Canvas GROUP
+
 }
